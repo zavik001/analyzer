@@ -1,137 +1,44 @@
-# Шаблон Java-проекта для домашних заданий
+# Log Analyzer
 
-Шаблон для домашних заданий [Академии Бэкенда 2024][course-url].
+This is a log analysis tool developed as a homework assignment for the [Backend Academy 2024 by Tinkoff](https://edu.tinkoff.ru/), implemented in Java.
 
-Цель данного репозитория – познакомить вас с процессом разработки приложений на
-Java с использованием наиболее распространенных практик, инструментов и
-библиотек.
+## Project Description
 
-## Структура проекта
+The analyzer reads log files from various sources (local files or URLs), analyzes their content for patterns and metrics, and outputs reports in Markdown or Asciidoc formats. It supports flexible filtering by date range and other criteria, providing detailed statistics on log data.
 
-Это типовой Java-проект, который собирается с помощью инструмента автоматической
-сборки проектов [Apache Maven](https://maven.apache.org/).
+## Key Features
 
-Проект состоит из следующих директорий и файлов:
+- **Log Reading**: Reads logs from file paths or URLs.
+- **Filtering**: By date range, fields, and values (e.g., IPs, response codes).
+- **Metrics Calculation**: Reports on request count, response code distribution, unique IPs, etc.
+- **Formatted Reporting**: Markdown or Asciidoc structured reports.
+- **Error Handling**: Custom exceptions for structured error management.
+- **Command-Line Parser**: For flexible, customizable analysis configurations.
 
-- [pom.xml](./pom.xml) – дескриптор сборки, используемый maven, или Project
-  Object Model. В нем описаны зависимости проекта и шаги по его сборке
-- [src/](./src) – директория, которая содержит исходный код приложения и его
-  тесты:
-  - [src/main/](./src/main) – здесь находится код вашего приложения
-  - [src/test/](./src/test) – здесь находятся тесты вашего приложения
-- [mvnw](./mvnw) и [mvnw.cmd](./mvnw.cmd) – скрипты maven wrapper для Unix и
-  Windows, которые позволяют запускать команды maven без локальной установки
-- [checkstyle.xml](checkstyle.xml),
-  [checkstyle-suppression.xml](checkstyle-suppression.xml), [pmd.xml](pmd.xml) и
-  [spotbugs-excludes.xml](spotbugs-excludes.xml) – в проекте используются
-  [линтеры](https://en.wikipedia.org/wiki/Lint_%28software%29) для контроля
-  качества кода. Указанные файлы содержат правила для используемых линтеров
-- [.mvn/](./.mvn) – служебная директория maven, содержащая конфигурационные
-  параметры сборщика
-- [lombok.config](lombok.config) – конфигурационный файл
-  [Lombok](https://projectlombok.org/), библиотеки помогающей избежать рутинного
-  написания шаблонного кода
-- [.editorconfig](.editorconfig) – файл с описанием настроек форматирования кода
-- [.github/workflows/build.yml](.github/workflows/build.yml) – файл с описанием
-  шагов сборки проекта в среде Github
-- [.gitattributes](.gitattributes), [.gitignore](.gitignore) – служебные файлы
-  для git, с описанием того, как обрабатывать различные файлы, и какие из них
-  игнорировать
+## Design and Architecture
 
-## Начало работы
+The project follows **SOLID principles** and uses design patterns for modularity and scalability:
 
-Подробнее о том, как приступить к разработке, описано в разделах
-[курса][course-url] `1.8 Настройка IDE`, `1.9 Работа с Git` и
-`1.10 Настройка SSH`.
+- **Factory Pattern**: For creating log readers and report writers (Markdown, Asciidoc).
+- **Chain of Responsibility**: For extensible argument parsing.
 
-Для того чтобы собрать проект, и проверить, что все работает корректно, можно
-запустить из модального окна IDEA
-[Run Anything](https://www.jetbrains.com/help/idea/running-anything.html)
-команду:
+## Testing
 
-```shell
-mvn clean verify
-```
+Testing covers functionality, interactions, and security, using:
 
-Альтернативно можно в терминале из корня проекта выполнить следующие команды.
+- **Unit Tests** (JUnit 5, Mockito): For isolated component testing.
+- **Integration Tests**: Verifies inter-component functionality.
+- **Security Tests**: Ensures SSRF prevention in URL handling.
 
-Для Unix (Linux, macOS, Cygwin, WSL):
+## Tools and Libraries
 
-```shell
+- **Libraries**: JUnit 5 for unit and parameterized tests, Mockito for mocking, AssertJ for fluent assertions, Lombok for boilerplate code generation.
+- **Build Tools**: Maven with Checkstyle, Modernizer, SpotBugs, and PMD checks.
+
+## How to Run the Analyzer
+
+```bash
+git clone https://github.com/zavik001/loganalyzer.git
+cd loganalyzer
 ./mvnw clean verify
-```
-
-Для Windows:
-
-```shell
-mvnw.cmd clean verify
-```
-
-Для окончания сборки потребуется подождать какое-то время, пока maven скачает
-все необходимые зависимости, скомпилирует проект и прогонит базовый набор
-тестов.
-
-Если вы в процессе сборки получили ошибку:
-
-```shell
-Rule 0: org.apache.maven.enforcer.rules.version.RequireJavaVersion failed with message:
-JDK version must be at least 22
-```
-
-Значит, версия вашего JDK ниже 22.
-
-Если же получили ошибку:
-
-```shell
-Rule 1: org.apache.maven.enforcer.rules.version.RequireMavenVersion failed with message:
-Maven version should, at least, be 3.8.8
-```
-
-Значит, у вас используется версия maven ниже 3.8.8. Такого не должно произойти,
-если вы запускаете сборку из IDEA или через `mvnw`-скрипты.
-
-Далее будут перечислены другие полезные команды maven.
-
-Запуск только компиляции основных классов:
-
-```shell
-mvn compile
-```
-
-Запуск тестов:
-
-```shell
-mvn test
-```
-
-Запуск линтеров:
-
-```shell
-mvn checkstyle:check modernizer:modernizer spotbugs:check pmd:check pmd:cpd-check
-```
-
-Вывод дерева зависимостей проекта (полезно при отладке транзитивных
-зависимостей):
-
-```shell
-mvn dependency:tree
-```
-
-Вывод вспомогательной информации о любом плагине (вместо `compiler` можно
-подставить интересующий вас плагин):
-
-```shell
-mvn help:describe -Dplugin=compiler
-```
-
-## Дополнительные материалы
-
-- Документация по maven: https://maven.apache.org/guides/index.html
-- Поиск зависимостей и их версий: https://central.sonatype.com/search
-- Документация по процессу автоматизированной сборки в среде github:
-  https://docs.github.com/en/actions
-- Документация по git: https://git-scm.com/doc
-- Javadoc для Java 22:
-  https://docs.oracle.com/en/java/javase/22/docs/api/index.html
-
-[course-url]: https://edu.tinkoff.ru/all-activities/courses/870efa9d-7067-4713-97ae-7db256b73eab
+mvn exec:java -Dexec.mainClass="backend.academy.loganalyzer.Main" -Dexec.args="--path <log-path> [--from <start-date: yyyy-MM-dd>] [--to <end-date: yyyy-MM-dd>] [--filter-field <field> --filter-value <value>] [--format <output-format>]"
